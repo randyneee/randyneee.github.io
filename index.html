@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Randyne Neo | Singapore Property Agent | Free Property Valuation</title>
+<meta name="description" content="Randyne Neo, PropNex property agent (CEA R071596I). Data-backed advice on HDB, condo, landed, commercial and industrial property in Singapore. Get a free professional valuation report.">
+<meta property="og:title" content="Randyne Neo | Free Professional Valuation Report">
+<meta property="og:description" content="What's your property worth today? Get a free, data-backed valuation report from Randyne Neo, PropNex Realty.">
+<meta property="og:image" content="randyne.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--accent:#0E5A52;--ink:#1A2421;--muted:#3D4A46;--soft:#55625E;--tint:#F3F6F5;--line:#E4E9E7;--dark:#10201C;--amber:#F59E0B}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}a:hover{color:#08403A}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+img{max-width:100%;display:block}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+section{scroll-margin-top:80px}
+h1,h2{margin:0;font-weight:800;letter-spacing:-.01em}
+p{margin:0}
+.eyebrow{font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.btn{display:inline-block;text-decoration:none;padding:16px 28px;border-radius:999px;font-size:17px;font-weight:700;border:1px solid transparent;text-align:center}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:#08403A;color:#fff}
+.btn-ghost{background:#fff;color:var(--ink);border-color:#C9D3D0}.btn-ghost:hover{color:var(--ink);border-color:var(--ink)}
+.btn-amber{background:var(--amber);color:var(--ink);font-weight:800}.btn-amber:hover{color:var(--ink);filter:brightness(1.05)}
+.btn-outline-light{color:#fff;border-color:#5E7570}.btn-outline-light:hover{color:#fff;border-color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:12px}
+.sec{padding:88px 0}
+.tint{background:var(--tint)}
+.grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+
+/* header */
+header{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line)}
+.hdr{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding-top:14px;padding-bottom:14px}
+.brand-name{font-size:19px;font-weight:800}
+.brand-sub{font-size:13px;color:var(--soft)}
+nav{display:flex;flex-wrap:wrap;align-items:center;gap:20px;font-size:15px;font-weight:600}
+nav a{text-decoration:none;color:var(--ink)}
+nav .btn{padding:12px 20px;font-size:15px}
+@media (max-width:860px){nav a:not(.btn){display:none}}
+
+/* hero */
+.hero{display:flex;flex-wrap:wrap;align-items:center;gap:48px;padding-top:72px;padding-bottom:72px}
+.hero-text{flex:999 1 480px;min-width:0;display:flex;flex-direction:column;gap:20px}
+.hero h1{font-size:clamp(36px,5vw,52px);line-height:1.08;letter-spacing:-.02em}
+.lead{font-size:19px;line-height:1.6;color:var(--muted);max-width:580px}
+.hero-photo{flex:1 1 320px;min-width:0;display:flex;justify-content:center}
+.hero-photo img{width:100%;max-width:400px;aspect-ratio:4/5;object-fit:cover;object-position:50% 20%;border-radius:24px;background:#DCE5E2}
+
+/* valuation */
+#valuation{background:var(--accent)}
+.val{display:flex;flex-wrap:wrap;gap:48px;align-items:flex-start}
+.val-copy{flex:1 1 340px;min-width:0;display:flex;flex-direction:column;gap:18px;color:#fff}
+.badge{align-self:flex-start;background:var(--amber);color:var(--ink);font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:8px 14px;border-radius:999px}
+.val-copy h2{font-size:clamp(32px,4vw,42px);line-height:1.1}
+.val-copy p{font-size:18px;line-height:1.6;color:#E3EFEC}
+.ticks{display:flex;flex-direction:column;gap:10px;font-size:16px;color:#E3EFEC}
+.ticks div{display:flex;gap:10px;align-items:center}
+.card-form{flex:999 1 440px;min-width:0;background:#fff;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:18px}
+.card-form h3{margin:0;font-size:22px;font-weight:800}
+.field{display:flex;flex-direction:column;gap:8px}
+.field label{font-size:15px;font-weight:700}
+.field input{font:inherit;font-size:17px;padding:14px 16px;border:1px solid #A9B7B3;border-radius:12px;color:var(--ink);width:100%}
+.consent{display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.5;color:var(--muted);cursor:pointer}
+.consent input{width:20px;height:20px;margin:1px 0 0;flex:none}
+.err{font-size:15px;font-weight:600;color:#B42318;min-height:0}
+.submit{font:inherit;font-size:18px;font-weight:800;min-height:56px;border:none;border-radius:999px;background:var(--accent);color:#fff;cursor:pointer}
+.submit:hover{background:#08403A}
+.done{display:none;flex-direction:column;gap:12px}
+.done h3{font-size:24px}
+.done p{font-size:16px;line-height:1.6;color:var(--muted)}
+.linkbtn{align-self:flex-start;background:none;border:none;padding:8px 0;font:inherit;font-size:15px;color:var(--accent);text-decoration:underline;cursor:pointer}
+
+/* about */
+.about{display:flex;flex-wrap:wrap;gap:48px}
+.about-head{flex:1 1 300px;min-width:0;display:flex;flex-direction:column;gap:12px}
+.about-head h2{font-size:38px;line-height:1.15}
+.about-body{flex:999 1 540px;min-width:0;display:flex;flex-direction:column;gap:18px;font-size:18px;line-height:1.75;color:var(--muted)}
+.quote{margin:8px 0 0;padding:24px 28px;background:var(--tint);border-radius:16px;font-size:21px;line-height:1.5;font-weight:700;color:var(--ink)}
+
+/* listings */
+.listings-cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:28px;background:#fff;border-radius:20px;padding:40px}
+.sec-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:32px}
+.sec-head h2{font-size:38px}
+.listing{text-decoration:none;color:var(--ink);background:#fff;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s}
+.listing:hover{color:var(--ink);transform:translateY(-3px)}
+.listing .ph{aspect-ratio:4/3;background:#DCE5E2;display:flex;align-items:center;justify-content:center;color:var(--soft);font-size:15px;font-weight:600;object-fit:cover;width:100%}
+.listing .bd{padding:20px;display:flex;flex-direction:column;gap:6px}
+.listing .tag{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.listing .nm{font-size:19px;font-weight:700}
+.listing .ds{font-size:15px;color:var(--soft)}
+.listing .more{font-size:15px;font-weight:700;padding-top:6px;color:var(--accent)}
+
+/* services */
+.svc{background:var(--tint);border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:10px}
+.svc h3{margin:0;font-size:20px;font-weight:700}
+.svc p{font-size:16px;line-height:1.6;color:var(--muted)}
+
+/* cta */
+.cta{background:var(--dark)}
+.cta .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:24px;padding-top:64px;padding-bottom:64px}
+.cta h2{font-size:32px;line-height:1.2;color:#fff;flex:999 1 420px;min-width:0}
+
+/* reviews */
+.review{margin:0;border:1px solid var(--line);border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:16px}
+.review blockquote{margin:0;font-size:16px;line-height:1.65;color:var(--muted)}
+.review figcaption{font-size:15px;font-weight:700}
+
+/* closing */
+.closing{max-width:760px;margin:0 auto;padding:88px 24px;display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
+.closing h2{font-size:40px;line-height:1.15}
+.closing p{font-size:18px;line-height:1.6;color:var(--muted)}
+
+/* footer */
+footer{background:var(--dark);color:#C4D1CD}
+.ft{display:flex;flex-wrap:wrap;justify-content:space-between;gap:28px;font-size:14px;line-height:1.8;padding-top:48px;padding-bottom:48px}
+.ft div{display:flex;flex-direction:column;gap:2px}
+.ft strong{color:#fff}
+.ft a{color:#C4D1CD}
+.legal{border-top:1px solid #24362F;font-size:13px;color:#8FA39D;padding-top:20px;padding-bottom:28px}
+</style>
+</head>
+<body>
+
+<header>
+<div class="wrap hdr">
+<div>
+<div class="brand-name">Randyne Neo</div>
+<div class="brand-sub">PropNex Realty · CEA R071596I</div>
+</div>
+<nav aria-label="Main">
+<a href="#valuation">Free valuation</a>
+<a href="#about">About</a>
+<a href="#listings">Listings</a>
+<a href="#services">Services</a>
+<a href="#reviews">Reviews</a>
+<a class="btn btn-primary js-wa" href="#" target="_blank" rel="noopener">Contact me</a>
+</nav>
+</div>
+</header>
+
+<main>
+<section class="tint">
+<div class="wrap hero">
+<div class="hero-text">
+<div class="eyebrow">Residential · Commercial · Industrial</div>
+<h1>Property decisions, backed by the numbers.</h1>
+<p class="lead">With a background in personal income tax at PwC and KPMG, I dig into the market data so you can buy, sell or invest in Singapore property with confidence.</p>
+<div class="row" style="padding-top:8px">
+<a class="btn btn-primary" href="#valuation">Get a free valuation</a>
+<a class="btn btn-ghost" href="#listings">View listings</a>
+</div>
+</div>
+<div class="hero-photo">
+<img src="randyne.jpg" alt="Randyne Neo, PropNex property agent in Singapore" width="1000" height="1500">
+</div>
+</div>
+</section>
+
+<section id="valuation">
+<div class="wrap sec val">
+<div class="val-copy">
+<div class="badge">Free · No obligation</div>
+<h2>What's your property worth today?</h2>
+<p>Get a free professional valuation report for your home or property, based on recent transactions and current market data. I'll prepare it personally and send it to you on WhatsApp.</p>
+<div class="ticks">
+<div><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Recent comparable transactions nearby</div>
+<div><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Estimated value range for your unit</div>
+<div><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Your details are only used to send the report — no spam</div>
+</div>
+</div>
+
+<div class="card-form">
+<form id="val-form" novalidate style="display:flex;flex-direction:column;gap:18px">
+<h3>Request your free valuation report</h3>
+<div class="field"><label for="f-name">Name</label><input id="f-name" name="name" type="text" autocomplete="name" placeholder="e.g. Tan Wei Ming" required></div>
+<div class="field"><label for="f-mobile">Contact number</label><input id="f-mobile" name="mobile" type="tel" autocomplete="tel" inputmode="tel" placeholder="e.g. 9123 4567" required></div>
+<div class="field"><label for="f-address">Property address</label><input id="f-address" name="address" type="text" autocomplete="street-address" placeholder="e.g. Blk 123 Sengkang East Way, S540123" required></div>
+<div class="field"><label for="f-unit">Unit number</label><input id="f-unit" name="unit" type="text" placeholder="e.g. #08-123" required></div>
+<label class="consent"><input id="f-consent" type="checkbox"><span>I agree to be contacted by Randyne Neo about my valuation request, and for my details to be used for that purpose under the PDPA.</span></label>
+<div id="f-error" class="err" role="alert" aria-live="polite"></div>
+<button class="submit" type="submit">Get my free valuation report</button>
+</form>
+<div id="val-done" class="done">
+<h3>Thanks, <span id="done-name"></span>!</h3>
+<p>WhatsApp should have opened with your request. Just tap send and I'll start on your valuation report. If it didn't open:</p>
+<a id="done-wa" class="btn btn-primary" style="align-self:flex-start" href="#" target="_blank" rel="noopener">Open WhatsApp</a>
+<button id="done-reset" class="linkbtn" type="button">Request another valuation</button>
+</div>
+</div>
+</div>
+</section>
+
+<section id="about">
+<div class="wrap sec about">
+<div class="about-head">
+<div class="eyebrow">About</div>
+<h2>Meet Randyne Neo</h2>
+<div style="font-size:15px;color:var(--soft)">Co-founder of JLD · PropNex Realty</div>
+</div>
+<div class="about-body">
+<p>After three years at PwC and KPMG specialising in Personal Income Tax, Randyne found himself wanting to pursue something more dynamic. Inspired by his partner's journey in real estate, he made the switch and is now two years into the industry.</p>
+<p>Drawing on his financial background, Randyne specialises in deep-diving into market data and numbers to help clients navigate residential, commercial and industrial property decisions.</p>
+<p>His proudest achievement is building JLD alongside June, and watching the team learn and grow together. Whether he's working with clients or teammates, Randyne believes in keeping things genuine, putting people first and doing what's right for them.</p>
+<blockquote class="quote">“Focus on building genuine relationships, and the results will take care of themselves.”</blockquote>
+</div>
+</div>
+</section>
+
+<section id="listings" class="tint">
+<div class="wrap sec">
+<div class="listings-cta">
+<div style="display:flex;flex-direction:column;gap:14px;flex:999 1 420px;min-width:0">
+<div class="eyebrow">Listings</div>
+<h2 style="font-size:38px">Browse my current listings</h2>
+<p style="font-size:18px;line-height:1.6;color:var(--muted)">See every property I'm marketing right now — for sale and for rent — with photos, prices and full details on 99.co.</p>
+</div>
+<div class="row">
+<a class="btn btn-primary" href="https://www.99.co/singapore/agents/R071596I-randyne-neo" target="_blank" rel="noopener">View my listings on 99.co</a>
+<a class="btn btn-ghost js-wa" href="#" target="_blank" rel="noopener">Ask about a listing</a>
+</div>
+</div>
+</div>
+</section>
+
+<section id="services">
+<div class="wrap sec">
+<div style="display:flex;flex-direction:column;gap:12px;max-width:680px;margin-bottom:32px">
+<h2 style="font-size:38px">How I can help</h2>
+<p style="font-size:18px;line-height:1.6;color:var(--muted)">From your first HDB to a commercial or industrial space, every recommendation comes with the numbers behind it.</p>
+</div>
+<div class="grid">
+<div class="svc"><h3>Buying a home</h3><p>HDB, condo or landed — shortlisting, viewings, negotiating and seeing it through to keys.</p></div>
+<div class="svc"><h3>Selling your property</h3><p>Data-backed pricing, marketing your home and handling buyers on your behalf.</p></div>
+<div class="svc"><h3>Commercial &amp; industrial</h3><p>Shops, offices and industrial units — buy, sell or lease, with the costs and yields worked out.</p></div>
+<div class="svc"><h3>Rentals</h3><p>For landlords and tenants — finding the right match and sorting out the tenancy.</p></div>
+</div>
+</div>
+</section>
+
+<section class="cta">
+<div class="wrap">
+<h2>Thinking of your next move? Start with what your home is worth.</h2>
+<div class="row">
+<a class="btn btn-amber" href="#valuation">Get a free valuation</a>
+<a class="btn btn-outline-light js-wa" href="#" target="_blank" rel="noopener">Chat on WhatsApp</a>
+</div>
+</div>
+</section>
+
+<section id="reviews">
+<div class="wrap sec">
+<h2 style="font-size:38px;margin-bottom:32px">What clients say</h2>
+<div class="grid">
+<figure class="review"><blockquote>“What stood out to us was the care you took to understand our concerns and what we wanted for our next home. You never rushed us into a decision, and you helped us weigh the options with our long-term needs in mind. From our first conversation to collecting the keys, we felt supported every step of the way.”</blockquote><figcaption>Rachel Tan</figcaption></figure>
+<figure class="review"><blockquote>“We appreciated how thoroughly you worked through the numbers before we committed. You broke down the costs, explained the financial implications, and helped us understand what would fit comfortably within our budget. Your analysis gave us the confidence to move forward with a clear picture of what we were taking on.”</blockquote><figcaption>Daniel Lim</figcaption></figure>
+<figure class="review"><blockquote>“Selling our home while finding our next place felt overwhelming at first, but your guidance made the process so much easier. You coordinated the timelines, kept us informed, and helped us plan each step so we knew what to expect. Thanks to your attention to detail, the transition from our old home to our new one went smoothly.”</blockquote><figcaption>Michelle Chen</figcaption></figure>
+</div>
+</div>
+</section>
+
+<section class="tint">
+<div class="closing">
+<h2>Let's talk about your next move</h2>
+<p>Whether you're buying, selling, renting or just curious about the numbers, I'm happy to help — no pressure, just honest advice.</p>
+<div class="row" style="justify-content:center;padding-top:8px">
+<a class="btn btn-primary" href="#valuation">Get a free valuation</a>
+<a class="btn btn-ghost js-wa" href="#" target="_blank" rel="noopener">Contact Randyne</a>
+</div>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="wrap ft">
+<div>
+<strong style="font-size:17px">Randyne Neo Jia Yuan</strong>
+<span>CEA Reg. No. R071596I</span>
+<span>PropNex Realty Pte Ltd · Agency Licence No. L3008022J</span>
+</div>
+<div>
+<strong>Contact</strong>
+<span>WhatsApp / call: <a class="js-wa js-phone" href="#" target="_blank" rel="noopener"></a></span>
+<span>Email: <a href="mailto:randyne.neo@gmail.com">randyne.neo@gmail.com</a></span>
+</div>
+<div>
+<strong>Follow</strong>
+<a href="https://www.instagram.com/randyneee" target="_blank" rel="noopener">Instagram</a>
+<a href="https://www.facebook.com/Randyneee" target="_blank" rel="noopener">Facebook</a>
+</div>
+
+</div>
+<div class="wrap legal">© <span id="yr"></span> Randyne Neo. All rights reserved.</div>
+</footer>
+
+<script>
+// ===== SETTINGS: put your WhatsApp number here (country code + number, digits only) =====
+var WHATSAPP_NUMBER = "6596737395";
+// =========================================================================================
+(function () {
+  var digits = String(WHATSAPP_NUMBER).replace(/\D/g, "");
+  var ready = digits.length >= 8;
+  function wa(text) { return "https://wa.me/" + digits + "?text=" + encodeURIComponent(text); }
+
+  var chat = wa("Hi Randyne, I found you through your website and would like to find out more.");
+  document.querySelectorAll(".js-wa").forEach(function (a) { a.href = chat; });
+  var pretty = ready ? "+" + digits.replace(/^(65)(\d{4})(\d{4})$/, "$1 $2 $3") : "[YOUR NUMBER]";
+  document.querySelectorAll(".js-phone").forEach(function (a) { a.textContent = pretty; });
+  document.getElementById("yr").textContent = new Date().getFullYear();
+
+  var form = document.getElementById("val-form");
+  var done = document.getElementById("val-done");
+  var err = document.getElementById("f-error");
+  function v(id) { return document.getElementById(id).value.trim(); }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var name = v("f-name"), mobile = v("f-mobile"), address = v("f-address"), unit = v("f-unit");
+    var msg = "";
+    if (!name) msg = "Please enter your name.";
+    else if (mobile.replace(/\D/g, "").length < 8) msg = "Please enter a valid contact number.";
+    else if (!address) msg = "Please enter your property address.";
+    else if (!unit) msg = "Please enter your unit number (or \"landed\" if none).";
+    else if (!document.getElementById("f-consent").checked) msg = "Please tick the box so I can send you the report.";
+    else if (!ready) msg = "Sorry, this form isn't set up yet. Please try again later.";
+    err.textContent = msg;
+    if (msg) return;
+
+    var url = wa("Hi Randyne, I would like a FREE professional valuation report for my property.\n\n" +
+      "Name: " + name + "\nContact number: " + mobile + "\nAddress: " + address + "\nUnit number: " + unit);
+    document.getElementById("done-name").textContent = name;
+    document.getElementById("done-wa").href = url;
+    form.style.display = "none";
+    done.style.display = "flex";
+    window.open(url, "_blank", "noopener");
+  });
+
+  document.getElementById("done-reset").addEventListener("click", function () {
+    form.reset(); err.textContent = "";
+    done.style.display = "none"; form.style.display = "flex";
+  });
+})();
+</script>
+</body>
+</html>
