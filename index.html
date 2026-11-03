@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Randyne Neo | Singapore Property Agent | Free Property Valuation</title>
-<meta name="description" content="Randyne Neo, PropNex property agent (CEA R071596I). Data-backed advice on HDB, condo, landed, commercial and industrial property in Singapore. Get a free professional valuation report.">
+<meta name="description" content="Randyne Neo, PropNex property agent (CEA R071596I). Data-backed advice on HDB, Condo, Landed, Commercial and Industrial property in Singapore. Get a free professional valuation report.">
 <meta property="og:title" content="Randyne Neo | Free Professional Valuation Report">
 <meta property="og:description" content="What's your property worth today? Get a free, data-backed valuation report from Randyne Neo, PropNex Realty.">
 <meta property="og:image" content="randyne.jpg">
@@ -106,9 +106,12 @@ nav .pill{opacity:1;background:var(--accent);color:#fff;padding:7px 15px;border-
 .stat b{display:block;font-size:clamp(56px,7vw,88px);font-weight:700;letter-spacing:-.04em;line-height:1;
   background:linear-gradient(120deg,#0E7A6C,#2BB3A0);-webkit-background-clip:text;background-clip:text;color:transparent}
 .stat span{display:block;margin-top:12px;font-size:19px;line-height:1.4;color:var(--muted);font-weight:500}
-.bio{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 56px;margin-top:88px}
-@media (max-width:760px){.bio{grid-template-columns:1fr}}
+.bio{margin-top:96px;display:flex;flex-direction:column;gap:56px}
 .bio p{font-size:clamp(19px,1.9vw,22px);line-height:1.55;color:var(--muted);font-weight:500}
+.bio p.bio-lead{font-size:clamp(26px,3.2vw,40px);line-height:1.3;letter-spacing:-.02em;font-weight:600;max-width:900px}
+.bio-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 56px}
+.bio-pair p{padding-top:24px;border-top:1px solid var(--line)}
+@media (max-width:760px){.bio-pair{grid-template-columns:1fr}}
 .bio p strong{color:var(--fg);font-weight:600}
 
 /* services */
@@ -226,7 +229,7 @@ footer{border-top:1px solid var(--line);font-size:13px;line-height:1.8;color:var
 <div class="hero-copy" id="heroCopy">
 <div class="eyebrow fade-in" style="--d:.05s">Residential · Commercial · Industrial</div>
 <h1 class="display" id="heroTitle">Property decisions, backed by the numbers.</h1>
-<p class="sub fade-in" style="--d:.75s">With a background in personal income tax at PwC and KPMG, I dig into the market data so you can buy, sell or invest in Singapore property with confidence.</p>
+<p class="sub fade-in" style="--d:.75s">With a Tax Specialisation at PwC and KPMG, I dig into the market data so you can buy, sell or invest in Singapore property with confidence.</p>
 <div class="btns fade-in" style="--d:.95s;justify-content:center">
 <a class="btn btn-primary" href="#valuation">Get a free valuation</a>
 <a class="link" href="#consult">Book a consultation ›</a>
@@ -253,17 +256,18 @@ footer{border-top:1px solid var(--line);font-size:13px;line-height:1.8;color:var
 <section id="about" class="block" data-theme="light">
 <div class="wrap">
 <div class="eyebrow rv">About</div>
-<h2 class="h2 rv" style="--d:.08s;margin-top:14px;max-width:820px">From tax advisor to property advisor.</h2>
+<h2 class="h2 rv" style="--d:.08s;margin-top:14px;max-width:820px">From Tax Advisor to Property Advisor.</h2>
 <div class="stats">
-<div class="stat rv" style="--d:.0s"><b>3 yrs</b><span>at PwC and KPMG, specialising in Personal Income Tax</span></div>
-<div class="stat rv" style="--d:.12s"><b>2 yrs</b><span>in real estate, across residential, commercial and industrial</span></div>
+<div class="stat rv" style="--d:.0s"><b>3 yrs</b><span>at PwC and KPMG, with a Specialisation in Tax</span></div>
+<div class="stat rv" style="--d:.12s"><b>2 yrs</b><span>in real estate, across residential, Commercial and Industrial</span></div>
 <div class="stat rv" style="--d:.24s"><b>JLD</b><span>the team he built alongside his partner, June</span></div>
 </div>
 <div class="bio">
-<p class="rv">After three years at PwC and KPMG, <strong>Randyne wanted something more dynamic.</strong> Inspired by his partner's journey in real estate, he made the switch and is now two years into the industry.</p>
-<p class="rv" style="--d:.1s">Drawing on his financial background, he <strong>deep-dives into market data and numbers</strong> to help clients navigate residential, commercial and industrial property decisions.</p>
-<p class="rv">His proudest achievement is <strong>building JLD alongside June</strong>, and watching the team learn and grow together.</p>
-<p class="rv" style="--d:.1s">With clients and teammates alike, he believes in <strong>keeping things genuine, putting people first</strong> and doing what's right for them.</p>
+<p class="bio-lead rv">After three years at PwC and KPMG, <strong>Randyne wanted something more dynamic.</strong> Inspired by his partner's journey in real estate, he made the switch and is now two years into the industry.</p>
+<div class="bio-pair">
+<p class="rv">Drawing on his financial background, he <strong>deep-dives into market data and numbers</strong> to help clients navigate Residential, Commercial and Industrial property decisions.</p>
+<p class="rv" style="--d:.12s">With clients and teammates alike, he believes in <strong>keeping things genuine, putting people first</strong> and doing what's right for them.</p>
+</div>
 </div>
 </div>
 </section>
@@ -272,11 +276,11 @@ footer{border-top:1px solid var(--line);font-size:13px;line-height:1.8;color:var
 <section id="services" class="block" data-theme="light" style="padding-top:0">
 <div class="wrap">
 <h2 class="h2 rv center" style="text-align:center;max-width:800px">Every move, worked out.</h2>
-<p class="sub rv center" style="--d:.08s;text-align:center;max-width:640px;margin-top:18px">From your first HDB to a commercial or industrial space, every recommendation comes with the numbers behind it.</p>
+<p class="sub rv center" style="--d:.08s;text-align:center;max-width:640px;margin-top:18px">From your first HDB or Condo, to a Commercial or Industrial space, every recommendation comes with the numbers behind it.</p>
 <div class="tiles">
-<div class="tile rv-scale"><div class="n">01</div><h3>Buying a home</h3><p>HDB, condo or landed — shortlisting, viewings, negotiating and seeing it through to keys.</p></div>
+<div class="tile rv-scale"><div class="n">01</div><h3>Buying a home</h3><p>HDB, Condo or Landed — shortlisting, viewings, negotiating and seeing it through to keys.</p></div>
 <div class="tile rv-scale" style="--d:.1s"><div class="n">02</div><h3>Selling your property</h3><p>Data-backed pricing, marketing your home and handling buyers on your behalf.</p></div>
-<div class="tile rv-scale"><div class="n">03</div><h3>Commercial &amp; industrial</h3><p>Shops, offices and industrial units — buy, sell or lease, with the costs and yields worked out.</p></div>
+<div class="tile rv-scale"><div class="n">03</div><h3>Commercial &amp; Industrial</h3><p>Shops, offices and Industrial units — buy, sell or lease, with the costs and yields worked out.</p></div>
 <div class="tile rv-scale" style="--d:.1s"><div class="n">04</div><h3>Rentals</h3><p>For landlords and tenants — finding the right match and sorting out the tenancy.</p></div>
 </div>
 </div>
@@ -507,7 +511,7 @@ var RELAY_URL = "https://script.google.com/macros/s/AKfycbxaJDfObiTS2b0zvm8Fh5ek
       if (!d.name) return "Please enter your name.";
       if (!phoneOk(d.mobile)) return "Please enter a valid contact number.";
       if (!d.address) return "Please enter your property address.";
-      if (!d.unit) return "Please enter your unit number (or \"landed\" if none).";
+      if (!d.unit) return "Please enter your unit number (or \"Landed\" if none).";
     },
     waText: function (d) {
       return "Hi Randyne, I would like a FREE professional valuation report for my property.\n\n" +
