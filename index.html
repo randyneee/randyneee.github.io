@@ -146,7 +146,24 @@ body.dark .field input{border-color:rgba(255,255,255,.2)}
 .done{display:none;flex-direction:column;gap:14px}
 .done h3{margin:0}
 .done p{font-size:17px;line-height:1.55;color:var(--muted)}
-.linkbtn{align-self:flex-start;background:none;border:none;padding:8px 0;font:inherit;font-size:15px;color:#5ED3C3;text-decoration:underline;cursor:pointer}
+.linkbtn{align-self:flex-start;background:none;border:none;padding:8px 0;font:inherit;font-size:15px;color:var(--accent);text-decoration:underline;cursor:pointer}
+body.dark .linkbtn{color:#5ED3C3}
+.field select,.field textarea{width:100%;font:inherit;font-size:17px;color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:14px;padding:26px 44px 10px 16px;transition:border-color .25s;-webkit-appearance:none;appearance:none}
+.field textarea{padding:26px 16px 10px;min-height:120px;resize:vertical;line-height:1.5}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236e6e73' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 18px center;cursor:pointer}
+.field select:focus,.field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px rgba(14,122,108,.2)}
+.field select+label,.field textarea:focus+label,.field textarea:not(:placeholder-shown)+label{top:8px;font-size:12px}
+.field select:invalid{color:var(--muted)}
+.field option{color:#1d1d1f}
+.reveal-field{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .5s var(--ease),opacity .4s var(--ease),margin .5s var(--ease);margin-top:-16px}
+.reveal-field>div{overflow:hidden}
+.reveal-field.open{grid-template-rows:1fr;opacity:1;margin-top:0}
+.hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;overflow:hidden}
+.submit[disabled]{opacity:.6;cursor:progress;transform:none}
+.done .check{width:56px;height:56px;border-radius:50%;background:rgba(14,122,108,.14);display:flex;align-items:center;justify-content:center}
+.consult-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:64px;align-items:center}
+@media (max-width:900px){.consult-grid{grid-template-columns:1fr;gap:48px}}
+body:not(.dark) .form-card{box-shadow:0 30px 60px -36px rgba(0,0,0,.25),0 2px 12px rgba(0,0,0,.04)}
 
 /* reviews: horizontal snap */
 .rail{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;padding:64px max(24px,calc((100vw - 1032px)/2)) 24px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
@@ -193,6 +210,7 @@ footer{border-top:1px solid var(--line);font-size:13px;line-height:1.8;color:var
 <nav aria-label="Main">
 <a href="#about">About</a>
 <a href="#services">Services</a>
+<a href="#consult">Consultation</a>
 <a href="#reviews">Reviews</a>
 <a href="#listings">Listings</a>
 <a class="pill" href="#valuation">Free valuation</a>
@@ -211,7 +229,7 @@ footer{border-top:1px solid var(--line);font-size:13px;line-height:1.8;color:var
 <p class="sub fade-in" style="--d:.75s">With a background in personal income tax at PwC and KPMG, I dig into the market data so you can buy, sell or invest in Singapore property with confidence.</p>
 <div class="btns fade-in" style="--d:.95s;justify-content:center">
 <a class="btn btn-primary" href="#valuation">Get a free valuation</a>
-<a class="link" href="#about">Meet Randyne ›</a>
+<a class="link" href="#consult">Book a consultation ›</a>
 </div>
 </div>
 <div class="hero-photo" id="heroPhoto">
@@ -281,6 +299,7 @@ footer{border-top:1px solid var(--line);font-size:13px;line-height:1.8;color:var
 <div class="form-card rv-scale" style="--d:.15s">
 <form id="val-form" novalidate>
 <h3>Request your free valuation report</h3>
+<div class="hp" aria-hidden="true"><label for="val-hp">Leave this empty</label><input id="val-hp" name="website" type="text" tabindex="-1" autocomplete="off"></div>
 <div class="field"><input id="f-name" name="name" type="text" autocomplete="name" placeholder=" " required><label for="f-name">Name</label></div>
 <div class="field"><input id="f-mobile" name="mobile" type="tel" autocomplete="tel" inputmode="tel" placeholder=" " required><label for="f-mobile">Contact number</label></div>
 <div class="field"><input id="f-address" name="address" type="text" autocomplete="street-address" placeholder=" " required><label for="f-address">Property address</label></div>
@@ -289,11 +308,60 @@ footer{border-top:1px solid var(--line);font-size:13px;line-height:1.8;color:var
 <div id="f-error" class="err" role="alert" aria-live="polite"></div>
 <button class="submit" type="submit">Get my free valuation report</button>
 </form>
-<div id="val-done" class="done">
-<h3>Thanks, <span id="done-name"></span>!</h3>
-<p>WhatsApp should have opened with your request. Just tap send and I'll start on your valuation report. If it didn't open:</p>
-<a id="done-wa" class="btn btn-primary" style="align-self:flex-start" href="#" target="_blank" rel="noopener">Open WhatsApp</a>
-<button id="done-reset" class="linkbtn" type="button">Request another valuation</button>
+<div id="val-done" class="done" tabindex="-1">
+<div class="check" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#5ED3C3" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+<h3>Thanks, <span class="js-done-name"></span>!</h3>
+<p class="js-done-msg">I've received your request and will be in touch shortly with your valuation report.</p>
+<a class="btn btn-primary js-done-wa" style="align-self:flex-start;display:none" href="#" target="_blank" rel="noopener">Open WhatsApp</a>
+<button class="linkbtn js-done-reset" type="button">Request another valuation</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- CONSULTATION -->
+<section id="consult" class="block" data-theme="light">
+<div class="wrap consult-grid">
+<div class="val-copy">
+<div class="eyebrow rv">Book a consultation</div>
+<h2 class="h2 rv" style="--d:.08s">Let's talk through your plans.</h2>
+<p class="sub rv" style="--d:.16s">Selling, buying, doing both at once, or just keeping an eye on the market — tell me what's on your mind and I'll reach out to arrange a time that suits you.</p>
+<div class="ticks">
+<div class="rv" style="--d:.24s"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0E7A6C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>A no-obligation chat, in person or over a call</div>
+<div class="rv" style="--d:.32s"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0E7A6C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Clear numbers on costs, timelines and options</div>
+</div>
+</div>
+
+<div class="form-card rv-scale" style="--d:.15s">
+<form id="con-form" novalidate>
+<h3>Book a consultation</h3>
+<div class="hp" aria-hidden="true"><label for="con-hp">Leave this empty</label><input id="con-hp" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+<div class="field"><input id="c-name" name="name" type="text" autocomplete="name" placeholder=" " required><label for="c-name">Name</label></div>
+<div class="field"><input id="c-mobile" name="mobile" type="tel" autocomplete="tel" inputmode="tel" placeholder=" " required><label for="c-mobile">Contact number</label></div>
+<div class="field">
+<select id="c-topic" name="topic" required>
+<option value="" disabled selected>Choose one</option>
+<option>Selling</option>
+<option>Purchasing</option>
+<option>Back-to-back Sale and Purchase</option>
+<option>Property Investment</option>
+<option>Market Updates</option>
+<option>Others</option>
+</select>
+<label for="c-topic">What would you like to discuss?</label>
+</div>
+<div class="reveal-field" id="c-remarks-wrap"><div><div class="field"><textarea id="c-remarks" name="remarks" placeholder=" " maxlength="500"></textarea><label for="c-remarks">Tell me a bit more</label></div></div></div>
+<label class="consent"><input id="c-consent" type="checkbox"><span>I agree to be contacted by Randyne Neo about my consultation request, and for my details to be used for that purpose under the PDPA.</span></label>
+<div id="c-error" class="err" role="alert" aria-live="polite"></div>
+<button class="submit" type="submit">Book my consultation</button>
+</form>
+<div id="con-done" class="done" tabindex="-1">
+<div class="check" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0E7A6C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+<h3>Thanks, <span class="js-done-name"></span>!</h3>
+<p class="js-done-msg">I've received your request and will reach out shortly to arrange a time.</p>
+<a class="btn btn-primary js-done-wa" style="align-self:flex-start;display:none" href="#" target="_blank" rel="noopener">Open WhatsApp</a>
+<button class="linkbtn js-done-reset" type="button">Send another request</button>
 </div>
 </div>
 </div>
@@ -337,7 +405,7 @@ footer{border-top:1px solid var(--line);font-size:13px;line-height:1.8;color:var
 <p class="sub rv" style="--d:.1s;max-width:620px">Buying, selling, renting or just curious about the numbers — no pressure, just honest advice.</p>
 <div class="btns rv" style="--d:.2s;justify-content:center">
 <a class="btn btn-primary" href="#valuation">Get a free valuation</a>
-<a class="link js-wa" href="#" target="_blank" rel="noopener">Chat on WhatsApp ›</a>
+<a class="link" href="#consult">Book a consultation ›</a>
 </div>
 </div>
 </section>
@@ -367,6 +435,9 @@ footer{border-top:1px solid var(--line);font-size:13px;line-height:1.8;color:var
 <script>
 // ===== SETTINGS: put your WhatsApp number here (country code + number, digits only) =====
 var WHATSAPP_NUMBER = "6596737395";
+// Web address of your Google Apps Script relay (sends form details to your Telegram).
+// Leave empty ("") and the forms fall back to opening WhatsApp.
+var RELAY_URL = "";
 // =========================================================================================
 (function () {
   /* ---------- WhatsApp + form ---------- */
@@ -379,33 +450,94 @@ var WHATSAPP_NUMBER = "6596737395";
   document.querySelectorAll(".js-phone").forEach(function (a) { a.textContent = pretty; });
   document.getElementById("yr").textContent = new Date().getFullYear();
 
-  var form = document.getElementById("val-form");
-  var done = document.getElementById("val-done");
-  var err = document.getElementById("f-error");
-  function v(id) { return document.getElementById(id).value.trim(); }
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    var name = v("f-name"), mobile = v("f-mobile"), address = v("f-address"), unit = v("f-unit");
-    var msg = "";
-    if (!name) msg = "Please enter your name.";
-    else if (mobile.replace(/\D/g, "").length < 8) msg = "Please enter a valid contact number.";
-    else if (!address) msg = "Please enter your property address.";
-    else if (!unit) msg = "Please enter your unit number (or \"landed\" if none).";
-    else if (!document.getElementById("f-consent").checked) msg = "Please tick the box so I can send you the report.";
-    else if (!ready) msg = "Sorry, this form isn't set up yet. Please try again later.";
-    err.textContent = msg;
-    if (msg) return;
-    var url = wa("Hi Randyne, I would like a FREE professional valuation report for my property.\n\n" +
-      "Name: " + name + "\nContact number: " + mobile + "\nAddress: " + address + "\nUnit number: " + unit);
-    document.getElementById("done-name").textContent = name;
-    document.getElementById("done-wa").href = url;
-    form.style.display = "none";
-    done.style.display = "flex";
-    window.open(url, "_blank", "noopener");
+  function clean(id) { var el = document.getElementById(id); return el ? el.value.trim() : ""; }
+  function phoneOk(m) { return m.replace(/\D/g, "").length >= 8; }
+
+  function setupForm(cfg) {
+    var form = document.getElementById(cfg.form), done = document.getElementById(cfg.done),
+        err = document.getElementById(cfg.error), btn = form.querySelector(".submit"), label = btn.textContent;
+    var doneWa = done.querySelector(".js-done-wa"), doneMsg = done.querySelector(".js-done-msg"), okMsg = doneMsg.textContent;
+    function finish(name, waUrl, msg) {
+      done.querySelector(".js-done-name").textContent = name;
+      doneMsg.textContent = msg || okMsg;
+      doneWa.style.display = waUrl ? "inline-flex" : "none";
+      if (waUrl) doneWa.href = waUrl;
+      var card = form.parentNode; card.style.minHeight = card.offsetHeight + "px";
+      card.style.display = "flex"; card.style.flexDirection = "column"; card.style.justifyContent = "center";
+      form.style.display = "none"; done.style.display = "flex"; done.focus({ preventScroll: true });
+    }
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var data = cfg.read();
+      var msg = cfg.validate(data);
+      if (!msg && !document.getElementById(cfg.consent).checked) msg = "Please tick the box so I can get back to you.";
+      err.textContent = msg || "";
+      if (msg) return;
+      if (clean(cfg.honeypot)) { finish(data.name); return; } // bot
+      var waUrl = ready ? wa(cfg.waText(data)) : "";
+
+      if (!RELAY_URL) { // not set up yet: fall back to WhatsApp
+        if (!waUrl) { err.textContent = "Sorry, this form isn't set up yet. Please try again later."; return; }
+        finish(data.name, waUrl, "WhatsApp should have opened with your request — just tap send. If it didn't open:");
+        window.open(waUrl, "_blank", "noopener");
+        return;
+      }
+      btn.disabled = true; btn.textContent = "Sending…";
+      data.type = cfg.type; data.page = location.href;
+      fetch(RELAY_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) })
+        .then(function (r) { return r.json(); })
+        .then(function (res) { if (!res || !res.ok) throw new Error("relay"); finish(data.name); })
+        .catch(function () {
+          finish(data.name, waUrl, "Sorry, something went wrong sending your request. Please send it to me on WhatsApp instead:");
+        })
+        .then(function () { btn.disabled = false; btn.textContent = label; });
+    });
+    done.querySelector(".js-done-reset").addEventListener("click", function () {
+      form.reset(); err.textContent = ""; if (cfg.onReset) cfg.onReset();
+      done.style.display = "none"; form.style.display = "flex"; form.parentNode.style.minHeight = "";
+    });
+  }
+
+  setupForm({
+    type: "valuation", form: "val-form", done: "val-done", error: "f-error", consent: "f-consent", honeypot: "val-hp",
+    read: function () { return { name: clean("f-name"), mobile: clean("f-mobile"), address: clean("f-address"), unit: clean("f-unit") }; },
+    validate: function (d) {
+      if (!d.name) return "Please enter your name.";
+      if (!phoneOk(d.mobile)) return "Please enter a valid contact number.";
+      if (!d.address) return "Please enter your property address.";
+      if (!d.unit) return "Please enter your unit number (or \"landed\" if none).";
+    },
+    waText: function (d) {
+      return "Hi Randyne, I would like a FREE professional valuation report for my property.\n\n" +
+        "Name: " + d.name + "\nContact number: " + d.mobile + "\nAddress: " + d.address + "\nUnit number: " + d.unit;
+    }
   });
-  document.getElementById("done-reset").addEventListener("click", function () {
-    form.reset(); err.textContent = "";
-    done.style.display = "none"; form.style.display = "flex";
+
+  var topic = document.getElementById("c-topic"), remarksWrap = document.getElementById("c-remarks-wrap");
+  function syncRemarks() {
+    var open = topic.value === "Others";
+    remarksWrap.classList.toggle("open", open);
+    document.getElementById("c-remarks").tabIndex = open ? 0 : -1;
+  }
+  topic.addEventListener("change", syncRemarks); syncRemarks();
+  setupForm({
+    type: "consultation", form: "con-form", done: "con-done", error: "c-error", consent: "c-consent", honeypot: "con-hp",
+    onReset: function () { setTimeout(syncRemarks, 0); },
+    read: function () {
+      var d = { name: clean("c-name"), mobile: clean("c-mobile"), topic: topic.value || "" };
+      if (d.topic === "Others") d.remarks = clean("c-remarks");
+      return d;
+    },
+    validate: function (d) {
+      if (!d.name) return "Please enter your name.";
+      if (!phoneOk(d.mobile)) return "Please enter a valid contact number.";
+      if (!d.topic) return "Please choose what you'd like to discuss.";
+      if (d.topic === "Others" && !d.remarks) return "Please tell me a little about what you'd like to discuss.";
+    },
+    waText: function (d) {
+      return "Hi Randyne, I'd like to book a consultation.\n\nName: " + d.name + "\nContact number: " + d.mobile +
+        "\nTopic: " + d.topic + (d.remarks ? "\nRemarks: " + d.remarks : "");
+    }
   });
 
   /* ---------- Reviews rail arrows ---------- */
