@@ -161,6 +161,15 @@ body.dark .linkbtn{color:#5ED3C3}
 .reveal-field{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .5s var(--ease),opacity .4s var(--ease),margin .5s var(--ease);margin-top:-16px}
 .reveal-field>div{overflow:hidden}
 .reveal-field.open{grid-template-rows:1fr;opacity:1;margin-top:0}
+.ferr{font-size:14px;font-weight:500;line-height:1.4;color:#D93025;margin-top:-8px;padding-left:4px}
+body.dark .ferr{color:#FF6961}
+.ferr:empty{display:none}
+.field.invalid input,.field.invalid select,.field.invalid textarea{border-color:#D93025}
+body.dark .field.invalid input{border-color:#FF6961}
+.ac-list{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:20;margin:0;padding:6px;list-style:none;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 20px 40px -12px rgba(0,0,0,.35);max-height:280px;overflow:auto}
+.ac-list li{padding:11px 12px;border-radius:10px;font-size:15px;line-height:1.35;cursor:pointer;color:var(--fg)}
+.ac-list li:hover,.ac-list li.active{background:rgba(14,122,108,.16)}
+.ac-list[hidden]{display:none}
 .hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;overflow:hidden}
 .submit[disabled]{opacity:.6;cursor:progress;transform:none}
 .done .check{width:56px;height:56px;border-radius:50%;background:rgba(14,122,108,.14);display:flex;align-items:center;justify-content:center}
@@ -456,13 +465,140 @@ var RELAY_URL = "https://script.google.com/macros/s/AKfycbxaJDfObiTS2b0zvm8Fh5ek
   document.querySelectorAll(".js-phone").forEach(function (a) { a.textContent = pretty; });
   document.getElementById("yr").textContent = new Date().getFullYear();
 
-  function clean(id) { var el = document.getElementById(id); return el ? el.value.trim() : ""; }
-  function phoneOk(m) { return m.replace(/\D/g, "").length >= 8; }
+  function val(id) { var el = document.getElementById(id); return el ? el.value.trim() : ""; }
+  // "Blank" = nothing except spaces/punctuation
+  function isBlank(v) { return !/[\p{L}\p{N}]/u.test(v || ""); }
 
+  /* ----- field checks (return an error message, or "" if OK) ----- */
+  function checkName(v) { return isBlank(v) ? "Please enter your name." : ""; }
+  function normPhone(v) {
+    var d = (v || "").replace(/\D/g, "");
+    if (d.length === 10 && d.indexOf("65") === 0) d = d.slice(2); // allow +65 prefix
+    return d;
+  }
+  function checkPhone(v) {
+    if (isBlank(v)) return "Please enter your contact number.";
+    if (/[^\d\s+()\-.]/.test(v)) return "Please use numbers only.";
+    if (!/^[89]\d{7}$/.test(normPhone(v))) return "Please enter an 8-digit Singapore number starting with 8 or 9.";
+    return "";
+  }
+  function checkUnit(v) { return isBlank(v) ? "Please enter your unit number (or \"Landed\" if none)." : ""; }
+
+  /* ----- inline error messages under each field ----- */
+  function errBox(el) {
+    var host = el.closest(".field") || el.closest(".consent") || el;
+    var box = host.nextElementSibling;
+    if (!box || !box.classList.contains("ferr")) {
+      box = document.createElement("div");
+      box.className = "ferr"; box.id = el.id + "-err"; box.setAttribute("aria-live", "polite");
+      host.parentNode.insertBefore(box, host.nextSibling);
+      el.setAttribute("aria-describedby", box.id);
+    }
+    return box;
+  }
+  function showErr(el, msg) {
+    errBox(el).textContent = msg || "";
+    var host = el.closest(".field");
+    if (host) host.classList.toggle("invalid", !!msg);
+    el.setAttribute("aria-invalid", msg ? "true" : "false");
+    return !msg;
+  }
+
+  /* ----- Singapore address check via OneMap (Singapore Land Authority) ----- */
+  var ONEMAP = "https://www.onemap.gov.sg/api/common/elastic/search?returnGeom=N&getAddrDetails=Y&pageNum=1&searchVal=";
+  function titleCase(s) {
+    return s.toLowerCase().replace(/\b([a-z])/g, function (m) { return m.toUpperCase(); })
+      .replace(/\b(\d+)([a-z])\b/g, function (m, n, l) { return n + l.toUpperCase(); });
+  }
+  function oneMapSearch(q) {
+    return fetch(ONEMAP + encodeURIComponent(q)).then(function (r) { if (!r.ok) throw new Error("onemap"); return r.json(); })
+      .then(function (j) {
+        return (j.results || []).filter(function (x) { return x.POSTAL && x.POSTAL !== "NIL"; }).map(function (x) {
+          return { label: titleCase(x.ADDRESS).replace(/ Singapore (\d{6})$/, ", Singapore $1"), postal: x.POSTAL };
+        });
+      });
+  }
+  var addrState = {};          // per input id: { verified: bool, offline: bool }
+  function setupAddress(id) {
+    var input = document.getElementById(id), host = input.closest(".field");
+    var list = document.createElement("ul");
+    list.className = "ac-list"; list.id = id + "-list"; list.setAttribute("role", "listbox"); list.hidden = true;
+    host.appendChild(list);
+    input.setAttribute("role", "combobox"); input.setAttribute("aria-autocomplete", "list");
+    input.setAttribute("aria-controls", list.id); input.setAttribute("aria-expanded", "false"); input.autocomplete = "off";
+    var st = addrState[id] = { verified: false, offline: false, items: [], active: -1 }, timer = null, seq = 0;
+    function close() { list.hidden = true; input.setAttribute("aria-expanded", "false"); st.active = -1; }
+    function render() {
+      list.innerHTML = "";
+      st.items.forEach(function (it, i) {
+        var li = document.createElement("li");
+        li.id = id + "-opt-" + i; li.setAttribute("role", "option"); li.textContent = it.label;
+        if (i === st.active) { li.className = "active"; input.setAttribute("aria-activedescendant", li.id); }
+        li.addEventListener("mousedown", function (e) { e.preventDefault(); pick(i); });
+        list.appendChild(li);
+      });
+      list.hidden = !st.items.length; input.setAttribute("aria-expanded", st.items.length ? "true" : "false");
+    }
+    function pick(i) {
+      var it = st.items[i]; if (!it) return;
+      input.value = it.label; st.verified = true; close(); showErr(input, "");
+    }
+    input.addEventListener("input", function () {
+      st.verified = false; showErr(input, "");
+      var q = input.value.trim();
+      clearTimeout(timer);
+      if (q.replace(/[^\p{L}\p{N}]/gu, "").length < 3) { st.items = []; close(); return; }
+      timer = setTimeout(function () {
+        var my = ++seq;
+        oneMapSearch(q).then(function (items) {
+          if (my !== seq) return;
+          st.offline = false; st.items = items.slice(0, 6); st.active = -1; render();
+        }).catch(function () { st.offline = true; st.items = []; close(); });
+      }, 250);
+    });
+    input.addEventListener("keydown", function (e) {
+      if (list.hidden) return;
+      if (e.key === "ArrowDown") { e.preventDefault(); st.active = (st.active + 1) % st.items.length; render(); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); st.active = (st.active - 1 + st.items.length) % st.items.length; render(); }
+      else if (e.key === "Enter" && st.active >= 0) { e.preventDefault(); pick(st.active); }
+      else if (e.key === "Escape") { close(); }
+    });
+    input.addEventListener("blur", function () { setTimeout(close, 150); });
+  }
+  // Resolves to "" if OK, or an error message
+  function checkAddress(id) {
+    var v = val(id), st = addrState[id];
+    if (isBlank(v)) return Promise.resolve("Please enter your property address.");
+    if (st.verified) return Promise.resolve("");
+    var postal = (v.match(/\b\d{6}\b/) || [])[0];
+    return oneMapSearch(postal || v).then(function (items) {
+      st.offline = false;
+      var hit = postal && items.filter(function (it) { return it.postal === postal; })[0];
+      if (hit) { document.getElementById(id).value = hit.label; st.verified = true; return ""; }
+      if (!postal && items.length === 1) { document.getElementById(id).value = items[0].label; st.verified = true; return ""; }
+      return postal ? "We couldn't find that postal code. Please check it, or pick your address from the list."
+                    : "Please pick your address from the list as you type, or include your 6-digit postal code.";
+    }).catch(function () { st.offline = true; return ""; }); // can't reach OneMap: don't block the visitor
+  }
+
+  /* ----- generic form handling ----- */
   function setupForm(cfg) {
     var form = document.getElementById(cfg.form), done = document.getElementById(cfg.done),
         err = document.getElementById(cfg.error), btn = form.querySelector(".submit"), label = btn.textContent;
     var doneWa = done.querySelector(".js-done-wa"), doneMsg = done.querySelector(".js-done-msg"), okMsg = doneMsg.textContent;
+
+    // live re-check: clear a field's error as soon as it's fixed; check on leaving a field
+    cfg.fields.forEach(function (f) {
+      var el = document.getElementById(f.id);
+      if (!f.check) return;
+      var touched = false;
+      el.addEventListener("blur", function () { if (val(f.id) || touched) { touched = true; showErr(el, f.check(el.value)); } });
+      el.addEventListener("input", function () { if (el.closest(".field").classList.contains("invalid")) showErr(el, f.check(el.value)); });
+      el.addEventListener("change", function () { if (el.tagName === "SELECT") showErr(el, f.check(el.value)); });
+    });
+    var consent = document.getElementById(cfg.consent);
+    consent.addEventListener("change", function () { if (consent.checked) showErr(consent, ""); });
+
     function finish(name, waUrl, msg) {
       done.querySelector(".js-done-name").textContent = name;
       doneMsg.textContent = msg || okMsg;
@@ -472,47 +608,67 @@ var RELAY_URL = "https://script.google.com/macros/s/AKfycbxaJDfObiTS2b0zvm8Fh5ek
       card.style.display = "flex"; card.style.flexDirection = "column"; card.style.justifyContent = "center";
       form.style.display = "none"; done.style.display = "flex"; done.focus({ preventScroll: true });
     }
+
+    var busy = false;
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      var data = cfg.read();
-      var msg = cfg.validate(data);
-      if (!msg && !document.getElementById(cfg.consent).checked) msg = "Please tick the box so I can get back to you.";
-      err.textContent = msg || "";
-      if (msg) return;
-      if (clean(cfg.honeypot)) { finish(data.name); return; } // bot
-      var waUrl = ready ? wa(cfg.waText(data)) : "";
+      if (busy) return;
+      err.textContent = "";
+      var firstBad = null, ok = true;
+      cfg.fields.forEach(function (f) {
+        if (!f.check || (f.when && !f.when())) { if (f.check) showErr(document.getElementById(f.id), ""); return; }
+        var el = document.getElementById(f.id);
+        if (!showErr(el, f.check(el.value))) { ok = false; firstBad = firstBad || el; }
+      });
+      if (!consent.checked) { showErr(consent, "Please tick this box so I can get back to you."); ok = false; firstBad = firstBad || consent; }
 
-      if (!RELAY_URL) { // not set up yet: fall back to WhatsApp
-        if (!waUrl) { err.textContent = "Sorry, this form isn't set up yet. Please try again later."; return; }
-        finish(data.name, waUrl, "WhatsApp should have opened with your request — just tap send. If it didn't open:");
-        window.open(waUrl, "_blank", "noopener");
-        return;
-      }
-      btn.disabled = true; btn.textContent = "Sending…";
-      data.type = cfg.type; data.page = location.href;
-      fetch(RELAY_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) })
-        .then(function (r) { return r.json(); })
-        .then(function (res) { if (!res || !res.ok) throw new Error("relay"); finish(data.name); })
-        .catch(function () {
-          finish(data.name, waUrl, "Sorry, something went wrong sending your request. Please send it to me on WhatsApp instead:");
-        })
-        .then(function () { btn.disabled = false; btn.textContent = label; });
+      busy = true; btn.disabled = true; btn.textContent = "Checking…";
+      var addrCheck = cfg.address ? checkAddress(cfg.address) : Promise.resolve("");
+      addrCheck.then(function (addrMsg) {
+        if (cfg.address) {
+          var ael = document.getElementById(cfg.address);
+          if (!showErr(ael, addrMsg)) { ok = false; if (!firstBad || ael.compareDocumentPosition(firstBad) & 4) firstBad = ael; }
+        }
+        if (!ok) {
+          busy = false; btn.disabled = false; btn.textContent = label;
+          if (firstBad) { firstBad.focus({ preventScroll: true }); firstBad.scrollIntoView({ behavior: "smooth", block: "center" }); }
+          return;
+        }
+        var data = cfg.read();
+        if (val(cfg.honeypot)) { finish(data.name); return; } // bot
+        var waUrl = ready ? wa(cfg.waText(data)) : "";
+        if (!RELAY_URL) {
+          busy = false; btn.disabled = false; btn.textContent = label;
+          if (!waUrl) { err.textContent = "Sorry, this form isn't set up yet. Please try again later."; return; }
+          finish(data.name, waUrl, "WhatsApp should have opened with your request — just tap send. If it didn't open:");
+          window.open(waUrl, "_blank", "noopener");
+          return;
+        }
+        btn.textContent = "Sending…";
+        data.type = cfg.type; data.page = location.href;
+        fetch(RELAY_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) })
+          .then(function (r) { return r.json(); })
+          .then(function (res) { if (!res || !res.ok) throw new Error("relay"); finish(data.name); })
+          .catch(function () { finish(data.name, waUrl, "Sorry, something went wrong sending your request. Please send it to me on WhatsApp instead:"); })
+          .then(function () { busy = false; btn.disabled = false; btn.textContent = label; });
+      });
     });
+
     done.querySelector(".js-done-reset").addEventListener("click", function () {
-      form.reset(); err.textContent = ""; if (cfg.onReset) cfg.onReset();
+      form.reset(); err.textContent = "";
+      cfg.fields.concat([{ id: cfg.consent }]).forEach(function (f) { showErr(document.getElementById(f.id), ""); });
+      if (cfg.address) addrState[cfg.address].verified = false;
+      if (cfg.onReset) cfg.onReset();
       done.style.display = "none"; form.style.display = "flex"; form.parentNode.style.minHeight = "";
     });
   }
 
+  setupAddress("f-address");
   setupForm({
     type: "valuation", form: "val-form", done: "val-done", error: "f-error", consent: "f-consent", honeypot: "val-hp",
-    read: function () { return { name: clean("f-name"), mobile: clean("f-mobile"), address: clean("f-address"), unit: clean("f-unit") }; },
-    validate: function (d) {
-      if (!d.name) return "Please enter your name.";
-      if (!phoneOk(d.mobile)) return "Please enter a valid contact number.";
-      if (!d.address) return "Please enter your property address.";
-      if (!d.unit) return "Please enter your unit number (or \"Landed\" if none).";
-    },
+    address: "f-address",
+    fields: [{ id: "f-name", check: checkName }, { id: "f-mobile", check: checkPhone }, { id: "f-address" }, { id: "f-unit", check: checkUnit }],
+    read: function () { return { name: val("f-name"), mobile: normPhone(val("f-mobile")), address: val("f-address"), unit: val("f-unit") }; },
     waText: function (d) {
       return "Hi Randyne, I would like a FREE professional valuation report for my property.\n\n" +
         "Name: " + d.name + "\nContact number: " + d.mobile + "\nAddress: " + d.address + "\nUnit number: " + d.unit;
@@ -520,25 +676,26 @@ var RELAY_URL = "https://script.google.com/macros/s/AKfycbxaJDfObiTS2b0zvm8Fh5ek
   });
 
   var topic = document.getElementById("c-topic"), remarksWrap = document.getElementById("c-remarks-wrap");
+  function isOthers() { return topic.value === "Others"; }
   function syncRemarks() {
-    var open = topic.value === "Others";
-    remarksWrap.classList.toggle("open", open);
-    document.getElementById("c-remarks").tabIndex = open ? 0 : -1;
+    remarksWrap.classList.toggle("open", isOthers());
+    document.getElementById("c-remarks").tabIndex = isOthers() ? 0 : -1;
+    if (!isOthers()) showErr(document.getElementById("c-remarks"), "");
   }
   topic.addEventListener("change", syncRemarks); syncRemarks();
   setupForm({
     type: "consultation", form: "con-form", done: "con-done", error: "c-error", consent: "c-consent", honeypot: "con-hp",
     onReset: function () { setTimeout(syncRemarks, 0); },
+    fields: [
+      { id: "c-name", check: checkName },
+      { id: "c-mobile", check: checkPhone },
+      { id: "c-topic", check: function (v) { return v ? "" : "Please choose what you'd like to discuss."; } },
+      { id: "c-remarks", when: isOthers, check: function (v) { return isOthers() && isBlank(v) ? "Please tell me a little about what you'd like to discuss." : ""; } }
+    ],
     read: function () {
-      var d = { name: clean("c-name"), mobile: clean("c-mobile"), topic: topic.value || "" };
-      if (d.topic === "Others") d.remarks = clean("c-remarks");
+      var d = { name: val("c-name"), mobile: normPhone(val("c-mobile")), topic: topic.value || "" };
+      if (isOthers()) d.remarks = val("c-remarks");
       return d;
-    },
-    validate: function (d) {
-      if (!d.name) return "Please enter your name.";
-      if (!phoneOk(d.mobile)) return "Please enter a valid contact number.";
-      if (!d.topic) return "Please choose what you'd like to discuss.";
-      if (d.topic === "Others" && !d.remarks) return "Please tell me a little about what you'd like to discuss.";
     },
     waText: function (d) {
       return "Hi Randyne, I'd like to book a consultation.\n\nName: " + d.name + "\nContact number: " + d.mobile +
