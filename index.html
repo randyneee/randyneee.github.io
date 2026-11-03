@@ -3,12 +3,61 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Randyne Neo | Singapore Property Agent | Free Property Valuation</title>
+<title>Randyne Neo | Singapore Property Agent (PropNex) | Free Property Valuation</title>
 <meta name="description" content="Randyne Neo, PropNex property agent (CEA R071596I). Data-backed advice on HDB, Condo, Landed, Commercial and Industrial property in Singapore. Get a free professional valuation report.">
+<link rel="canonical" href="https://randyneee.github.io/">
+<meta name="author" content="Randyne Neo">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://randyneee.github.io/">
+<meta property="og:site_name" content="Randyne Neo · PropNex Realty">
+<meta property="og:locale" content="en_SG">
 <meta property="og:title" content="Randyne Neo | Free Professional Valuation Report">
 <meta property="og:description" content="What's your property worth today? Get a free, data-backed valuation report from Randyne Neo, PropNex Realty.">
-<meta property="og:image" content="randyne.jpg">
+<meta property="og:image" content="https://randyneee.github.io/share.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Randyne Neo, PropNex property agent in Singapore">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Randyne Neo | Free Professional Valuation Report">
+<meta name="twitter:description" content="What's your property worth today? Get a free, data-backed valuation report from Randyne Neo, PropNex Realty.">
+<meta name="twitter:image" content="https://randyneee.github.io/share.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "RealEstateAgent",
+  "name": "Randyne Neo",
+  "alternateName": "Randyne Neo Jia Yuan",
+  "description": "Singapore property agent with PropNex Realty (CEA R071596I). Data-backed advice on HDB, Condo, Landed, Commercial and Industrial property. Free professional valuation reports.",
+  "url": "https://randyneee.github.io/",
+  "image": "https://randyneee.github.io/randyne.jpg",
+  "telephone": "+65 9673 7395",
+  "email": "randyne.neo@gmail.com",
+  "areaServed": { "@type": "Country", "name": "Singapore" },
+  "address": { "@type": "PostalAddress", "addressCountry": "SG" },
+  "parentOrganization": { "@type": "Organization", "name": "PropNex Realty Pte Ltd" },
+  "identifier": [
+    { "@type": "PropertyValue", "propertyID": "CEA Registration No.", "value": "R071596I" }
+  ],
+  "sameAs": [
+    "https://www.instagram.com/randyneee",
+    "https://www.facebook.com/Randyneee",
+    "https://www.99.co/singapore/agents/R071596I-randyne-neo"
+  ]
+}
+</script>
 <meta name="theme-color" content="#fbfbfd">
+<script>
+  // ===== Google Analytics: paste your Measurement ID (starts with "G-") between the quotes =====
+  var GA_ID = "";
+  if (/^G-[A-Z0-9]+$/.test(GA_ID)) {
+    var gs = document.createElement("script"); gs.async = true;
+    gs.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_ID; document.head.appendChild(gs);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { dataLayer.push(arguments); };
+    gtag("js", new Date()); gtag("config", GA_ID);
+  }
+  window.track = function (name, params) { if (window.gtag) gtag("event", name, params || {}); };
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -444,7 +493,7 @@ footer{border-top:1px solid var(--line);font-size:13px;line-height:1.8;color:var
 <a href="https://www.facebook.com/Randyneee" target="_blank" rel="noopener">Facebook</a>
 </div>
 </div>
-<div class="wrap legal">© <span id="yr"></span> Randyne Neo. All rights reserved.</div>
+<div class="wrap legal">© <span id="yr"></span> Randyne Neo. All rights reserved. · This site uses Google Analytics cookies to understand how visitors use it. Details you submit in the forms are used only to respond to your enquiry.</div>
 </footer>
 
 <script>
@@ -661,7 +710,11 @@ var RELAY_URL = "https://script.google.com/macros/s/AKfycbxaJDfObiTS2b0zvm8Fh5ek
         data.type = cfg.type; data.page = location.href;
         fetch(RELAY_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) })
           .then(function (r) { return r.json(); })
-          .then(function (res) { if (!res || !res.ok) throw new Error("relay"); finish(data.name); })
+          .then(function (res) {
+            if (!res || !res.ok) throw new Error("relay");
+            track("generate_lead", { form: cfg.type, topic: data.topic || "" });
+            finish(data.name);
+          })
           .catch(function () { finish(data.name, waUrl, "Sorry, something went wrong sending your request. Please send it to me on WhatsApp instead:"); })
           .then(function () { busy = false; btn.disabled = false; btn.textContent = label; });
       });
