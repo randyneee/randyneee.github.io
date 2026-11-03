@@ -479,8 +479,21 @@ var RELAY_URL = "https://script.google.com/macros/s/AKfycbxaJDfObiTS2b0zvm8Fh5ek
   function checkPhone(v) {
     if (isBlank(v)) return "Please enter your contact number.";
     if (/[^\d\s+()\-.]/.test(v)) return "Please use numbers only.";
-    if (!/^[89]\d{7}$/.test(normPhone(v))) return "Please enter an 8-digit Singapore number starting with 8 or 9.";
+    var d = normPhone(v);
+    if (!/^[89]\d{7}$/.test(d)) return "Please enter an 8-digit Singapore number starting with 8 or 9.";
+    if (isFakeNumber(d)) return "This number doesn't look right. Please enter your actual mobile number.";
     return "";
+  }
+  // Obvious made-up numbers: one digit repeated (88888888) or a straight run up/down (98765432, 89012345)
+  function isFakeNumber(d) {
+    if (/^(\d)\1{7}$/.test(d)) return true;
+    var up = true, down = true;
+    for (var i = 1; i < d.length; i++) {
+      var diff = (d.charCodeAt(i) - d.charCodeAt(i - 1) + 10) % 10;
+      if (diff !== 1) up = false;
+      if (diff !== 9) down = false;
+    }
+    return up || down;
   }
   function checkUnit(v) { return isBlank(v) ? "Please enter your unit number (or \"Landed\" if none)." : ""; }
 
