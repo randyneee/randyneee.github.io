@@ -774,11 +774,62 @@ var RELAY_URL = "https://script.google.com/macros/s/AKfycbxaJDfObiTS2b0zvm8Fh5ek
     }
   });
 
-  /* ---------- Reviews rail arrows ---------- */
-  var rail = document.getElementById("rail");
-  function step(dir) { var c = rail.querySelector(".review"); rail.scrollBy({ left: dir * (c.offsetWidth + 20), behavior: "smooth" }); }
-  document.getElementById("railPrev").addEventListener("click", function () { step(-1); });
-  document.getElementById("railNext").addEventListener("click", function () { step(1); });
+  /* ---------- Reviews: endless carousel ---------- */
+  (function () {
+    var rail = document.getElementById("rail");
+    var originals = Array.prototype.slice.call(rail.querySelectorAll(".review"));
+    var n = originals.length;
+    // One copy of the set after the originals, so the last review flows straight into the first
+    originals.forEach(function (card) {
+      var c = card.cloneNode(true);
+      c.classList.add("in"); c.setAttribute("aria-hidden", "true"); c.dataset.clone = "1";
+      rail.appendChild(c);
+    });
+    var cards = rail.querySelectorAll(".review");
+    function setWidth() { return cards[n].offsetLeft - cards[0].offsetLeft; }
+    function pitch() { return cards[1].offsetLeft - cards[0].offsetLeft; }
+    function jump(x) { // instant, invisible reposition
+      rail.style.scrollSnapType = "none"; rail.style.scrollBehavior = "auto";
+      rail.scrollLeft = x;
+      rail.offsetHeight; rail.style.scrollSnapType = ""; rail.style.scrollBehavior = "";
+    }
+    function normalise() { var w = setWidth(); if (rail.scrollLeft >= w - 2) jump(rail.scrollLeft - w); }
+    function step(dir) {
+      var p = pitch();
+      normalise();
+      var idx = Math.round(rail.scrollLeft / p);
+      if (dir < 0 && idx === 0) { // wrap backwards: hop to the identical copy, then slide back one
+        jump(n * p);
+        idx = n;
+      }
+      var target = (idx + dir) * p;
+      requestAnimationFrame(function () {
+        rail.scrollTo({ left: target, behavior: reduceMotion ? "auto" : "smooth" });
+      });
+    }
+    var settle;
+    rail.addEventListener("scroll", function () { clearTimeout(settle); settle = setTimeout(normalise, 140); }, { passive: true });
+
+    document.getElementById("railPrev").addEventListener("click", function () { step(-1); restart(); });
+    document.getElementById("railNext").addEventListener("click", function () { step(1); restart(); });
+
+    // Auto-advance every 5s; pause while someone is reading, touching or hovering, or when it's off screen
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var DELAY = 5000, timer = null, paused = false, visible = false;
+    function tick() { if (!paused && visible && !document.hidden) step(1); }
+    function restart() { clearInterval(timer); if (!reduceMotion) timer = setInterval(tick, DELAY); }
+    var section = document.getElementById("reviews");
+    function pause() { paused = true; }
+    function resume() { paused = false; restart(); }
+    section.addEventListener("mouseenter", pause); section.addEventListener("mouseleave", resume);
+    rail.addEventListener("touchstart", pause, { passive: true });
+    rail.addEventListener("touchend", function () { setTimeout(resume, 2500); }, { passive: true });
+    section.addEventListener("focusin", pause); section.addEventListener("focusout", resume);
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (en) { visible = en[0].isIntersecting; }, { threshold: 0.4 }).observe(rail);
+    } else { visible = true; }
+    restart();
+  })();
 
   /* ---------- Motion ---------- */
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
